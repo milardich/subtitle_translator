@@ -1,5 +1,8 @@
 from googletrans import Translator, constants
 import srt
+import os
+import sys
+
 
 # init the Google API translator
 translator = Translator()
@@ -36,9 +39,15 @@ def translate_srt_file(srt_file_path, destination_language, translated_srt_path)
 
 
 if __name__ == "__main__":
-    srt_file_path = "D:\\Downloads\\bb_srt_test.srt"
-    language = "hr"
-    translated_srt_path = "D:\\Downloads\\bb_srt_test-TRANSLATED.srt"
-    translate_srt_file(srt_file_path, language, translated_srt_path)
+    srt_files = sys.argv[1:]
+    for srt_file in srt_files:
+        translated_srt_path = srt_file[:-3] + "_-TRANSLATED.srt"
+        language = "hr"
+        translate_srt_file(srt_file, language, translated_srt_path)
+
+    # srt_file_path = "D:\\Downloads\\bb_srt_test.srt"
+    # language = "hr"
+    # translated_srt_path = "D:\\Downloads\\bb_srt_test-TRANSLATED.srt"
+    # translate_srt_file(srt_file_path, language, translated_srt_path)
 
     
