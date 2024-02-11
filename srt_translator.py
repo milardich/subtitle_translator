@@ -20,7 +20,7 @@ def translate_subtitle(subtitle, destination_language):
     
 
 def save_translated_srt(subtitles, file_name):
-    srt_file = open(file_name, "a")
+    srt_file = open(file_name, "a", encoding="utf-16")
     composed_srt = srt.compose(subtitles)
     srt_file.write(composed_srt)
 
