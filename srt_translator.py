@@ -1,9 +1,33 @@
 import srt
 import os
 import sys
-from google.cloud import translate_v2 as translate
+from google.cloud import translate_v3 as translate
 import time
 import threading
+
+
+##### TESTING translate_v3 ################################################
+# Initialize Translation client
+def translate_text(
+    text: str = "YOUR_TEXT_TO_TRANSLATE", target_language: str = "TRANSLATION_LANGUAGE"
+) -> translate.TranslationServiceClient:
+    
+    client = translate.TranslationServiceClient()
+    project_id = "l9gigatranslator"
+    location = "global"
+    parent = f"projects/{project_id}/locations/{location}"
+    model_path = f"{parent}/models/general/nmt"
+
+    response = client.translate_text(
+        contents = [text],
+        target_language_code = target_language,
+        parent = parent,
+        mime_type = "text/plain",
+        #source_language_code = "en",
+        model = model_path
+    )
+    return response
+##########################################################################
 
 
 def load_data(srt_file_path):
@@ -12,13 +36,36 @@ def load_data(srt_file_path):
 
 
 def translate_subtitle(subtitle, destination_language):
-    translator = translate.Client()
     if isinstance(subtitle, bytes):
         subtitle = subtitle.decode("utf-8")
-    result = translator.translate(subtitle, target_language=destination_language, format_= "text")
-    translated_result = result["translatedText"]
+
+    '''
+    TODO:   1. remove '\n' from provided text/subtitle and 
+            concat string so its one single line, without '\n'
+
+            2. pass one liner to translate_text as text
+
+            3. in translated text, insert '\n' after the word that is in the middle
+
+            Example:
+                [Original text]
+                They are attacking our most
+                valuable the railworkers.
+                ->
+                [Removed '\n']
+                They are attacking our most valuable the railworkers.
+                -> 
+                [Translated] 
+                Napadaju nase naj vrijednije zeljeznicare.
+                ->
+                [Formatted with '\n']
+                Napadaju nase naj
+                vrijednije zeljeznicare.
+    '''
+    result = translate_text(text = subtitle, target_language = destination_language)
+    translated_result = result.translations[0].translated_text
     print(f"\n\n{subtitle}\n--------------------\n{translated_result}\n\n")
-    return result["translatedText"]
+    return translated_result
     
 
 def save_translated_srt(subtitles, file_name):
@@ -41,8 +88,6 @@ def translate_srt_file(srt_file_path, destination_language, translated_srt_path)
 
 
 if __name__ == "__main__":
-    # test = translate_subtitle("Oh my god, Chechen men are attacking railroad. Why?", "hr")
-    # print(test)
 
     print(f"\nTranslation started at {time.asctime(time.localtime())}")
 
