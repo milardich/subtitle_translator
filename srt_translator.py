@@ -14,10 +14,10 @@ def load_data(srt_file_path):
 def translate_subtitle(subtitle, destination_language):
     translator = translate.Client()
     if isinstance(subtitle, bytes):
-        subtitle = subtitle.decode("utf-16")
-    result = translator.translate(subtitle, target_language=destination_language)
+        subtitle = subtitle.decode("utf-8")
+    result = translator.translate(subtitle, target_language=destination_language, format_= "text")
     translated_result = result["translatedText"]
-    print(f"\n[{subtitle}] ->>> {translated_result}\n")
+    print(f"\n\n{subtitle}\n_________________________\n{translated_result}\n\n")
     return result["translatedText"]
     
 
