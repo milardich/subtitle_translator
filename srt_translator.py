@@ -17,7 +17,7 @@ def translate_subtitle(subtitle, destination_language):
         subtitle = subtitle.decode("utf-8")
     result = translator.translate(subtitle, target_language=destination_language, format_= "text")
     translated_result = result["translatedText"]
-    print(f"\n\n{subtitle}\n_________________________\n{translated_result}\n\n")
+    print(f"\n\n{subtitle}\n--------------------\n{translated_result}\n\n")
     return result["translatedText"]
     
 
