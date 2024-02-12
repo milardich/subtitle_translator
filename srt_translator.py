@@ -6,8 +6,6 @@ import time
 import threading
 
 
-##### TESTING translate_v3 ################################################
-# Initialize Translation client
 def translate_text(
     text: str = "YOUR_TEXT_TO_TRANSLATE", target_language: str = "TRANSLATION_LANGUAGE"
 ) -> translate.TranslationServiceClient:
@@ -27,7 +25,6 @@ def translate_text(
         model = model_path
     )
     return response
-##########################################################################
 
 
 def load_data(srt_file_path):
@@ -35,35 +32,30 @@ def load_data(srt_file_path):
     return srt_file.read()
 
 
+def single_line_text(text: str) -> str:
+    split_text = text.split('\n')
+    return ' '.join(split_text)
+
+
+def multi_line_text(text: str):
+    result = text
+    if len(text) > 35:
+        text_words = text.split()
+        word_count = len(text_words)
+        endl_position = int(word_count / 2)
+        first_part = ' '.join(text_words[:endl_position])
+        second_part = ' '.join(text_words[endl_position:])
+        result = f"{first_part}\n{second_part}"
+    return result
+
+
 def translate_subtitle(subtitle, destination_language):
     if isinstance(subtitle, bytes):
         subtitle = subtitle.decode("utf-8")
-
-    '''
-    TODO:   1. remove '\n' from provided text/subtitle and 
-            concat string so its one single line, without '\n'
-
-            2. pass one liner to translate_text as text
-
-            3. in translated text, insert '\n' after the word that is in the middle
-
-            Example:
-                [Original text]
-                They are attacking our most
-                valuable the railworkers.
-                ->
-                [Removed '\n']
-                They are attacking our most valuable the railworkers.
-                -> 
-                [Translated] 
-                Napadaju nase naj vrijednije zeljeznicare.
-                ->
-                [Formatted with '\n']
-                Napadaju nase naj
-                vrijednije zeljeznicare.
-    '''
+    subtitle = single_line_text(subtitle)
     result = translate_text(text = subtitle, target_language = destination_language)
     translated_result = result.translations[0].translated_text
+    translated_result = multi_line_text(translated_result)
     print(f"\n\n{subtitle}\n--------------------\n{translated_result}\n\n")
     return translated_result
     
@@ -87,6 +79,16 @@ def translate_srt_file(srt_file_path, destination_language, translated_srt_path)
     print(f"\n[TRANSLATED ({time_end - time_start})]: {srt_file_path}\n")
 
 
+
+'''
+Usage:
+Example [directory provided (multi threaded)]: > python srt_translator.py -d "D:\Movies\ExampleMovie" -t
+Example [single threaded]:                     > python srt_translator.py -d "D:\Movies\ExampleMovie"
+
+Example [srt path provided]: > python srt_translator.py "D:\Movies\ExampleMovie\subtitle1.srt" "D:\Movies\ExampleMovie\subtitle2.srt"
+Example [multithreaded]:     > python srt_translator.py "D:\Movies\ExampleMovie\subtitle1.srt" "D:\Movies\ExampleMovie\subtitle2.srt" -t
+'''
+
 if __name__ == "__main__":
 
     print(f"\nTranslation started at {time.asctime(time.localtime())}")
@@ -107,9 +109,8 @@ if __name__ == "__main__":
                     print(f"\nNew thread started")
                 else:
                     translate_srt_file(directory + "\\" + file, "hr", translated_srt_path)
-                #translate_srt_file(directory + "\\" + file, "hr", translated_srt_path)
 
-    # Provide paths of srt files as command line arguments
+    # Provide multiple paths of srt files as command line arguments
     else:
         srt_files = sys.argv[1:]
         for srt_file in srt_files:
@@ -123,4 +124,3 @@ if __name__ == "__main__":
             else:
                 print(f"\nThreading: OFF\n")
                 translate_srt_file(srt_file, language, translated_srt_path)
-            #translate_srt_file(srt_file, language, translated_srt_path)
