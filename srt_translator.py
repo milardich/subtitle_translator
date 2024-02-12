@@ -39,15 +39,20 @@ def translate_srt_file(srt_file_path, destination_language, translated_srt_path)
 
 
 if __name__ == "__main__":
-    srt_files = sys.argv[1:]
-    for srt_file in srt_files:
-        translated_srt_path = srt_file[:-3] + "_-TRANSLATED.srt"
-        language = "hr"
-        translate_srt_file(srt_file, language, translated_srt_path)
 
-    # srt_file_path = "D:\\Downloads\\bb_srt_test.srt"
-    # language = "hr"
-    # translated_srt_path = "D:\\Downloads\\bb_srt_test-TRANSLATED.srt"
-    # translate_srt_file(srt_file_path, language, translated_srt_path)
+    # Translate every srt file in provided directory
+    if sys.argv[1] == "-d":
+        directory = sys.argv[2]
+        files = os.listdir(directory)
+        for file in files:
+            if file.endswith(".srt"):
+                translated_srt_path = directory + "\\"+ file[:-4] + "_-TRANSLATED.srt"
+                translate_srt_file(directory + "\\" + file, "hr", translated_srt_path)
 
-    
+    # Provide paths of srt files as command line arguments
+    else:
+        srt_files = sys.argv[1:]
+        for srt_file in srt_files:
+            translated_srt_path = srt_file[:-4] + "_-TRANSLATED.srt"
+            language = "hr"
+            translate_srt_file(srt_file, language, translated_srt_path)
