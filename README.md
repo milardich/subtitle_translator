@@ -1,5 +1,5 @@
 ## About this project
-#### This python script translates subtitles to a desired language. Translation is done by using Google Cloud Translation API so make sure you stay within the [rate limits](https://cloud.google.com/translate/quotas).
+#### This python script translates subtitles to a desired language. Translation is performed using the Google Cloud Translation API, so please ensure you adhere to the [rate limits](https://cloud.google.com/translate/quotas).
 
 #
 
