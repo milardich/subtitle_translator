@@ -16,12 +16,15 @@
 #
 
 ### Example usage
-`python.exe srt_translator.py -d "D:\ExampleDirectory" -t`
+- `python.exe srt_translator.py -d "D:\ExampleDirectory" -t`
 - Scans the directory for .srt files, loops through each file, and translates the subtitles.
+
 <br>
 
-`python.exe srt_translator.py "D:\ExampleDirectory\example_subtitles1.srt" "D:\ExampleDirectory\example_subtitles2.srt" -t`
+- `python.exe srt_translator.py "D:\ExampleDirectory\example_subtitles1.srt" "D:\ExampleDirectory\example_subtitles2.srt" -t`
 - Loops through provided .srt files and translates the subtitles
+
+<br>
 
 - After the translation is complete, a new .srt file is created in the same directory with the translated content.
 - `"D:\ExampleDirectory\example_subtitles1_-TRANSLATED.srt"` 
