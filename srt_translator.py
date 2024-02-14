@@ -86,12 +86,13 @@ def translate_srt_file(srt_file_path, destination_language, translated_srt_path)
     time_start = time.time()
     data = load_data(srt_file_path)
     subtitles = list(srt.parse(data))
+    print(f"\nTranslating: {srt_file_path} \nEstimated time: {len(subtitles) * 1.5} seconds ({len(subtitles) * 1.5 / 60} minutes)\n")
     for sub in subtitles:
         # TODO: add delay to avoid getting rate limited by google
         sub.content = translate_subtitle(sub.content, destination_language)
     save_translated_srt(subtitles, translated_srt_path)
     time_end = time.time()
-    print(f"\n[TRANSLATED ({time_end - time_start})]: {srt_file_path}\n")
+    print(f"\n[TRANSLATED ({int(time_end - time_start)} seconds)]: {srt_file_path}\n")
 
 
 
@@ -145,6 +146,7 @@ def srt_translate(srt_files: list[str]):
 # TODO: implement BCP-47 language code validation
 def validate_language(language: str):
     return True
+
 
 
 '''
