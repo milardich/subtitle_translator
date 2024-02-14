@@ -16,28 +16,29 @@
 #
 
 ### Example usage
-- `python.exe srt_translator.py -d "D:\ExampleDirectory" -t`
-- Scans the directory for .srt files, loops through each file, and translates the subtitles.
+- `python.exe srt_translator.py -t --l=hr --d="D:\ExampleDirectory","D:\ExampleDirectory"`
+- Scans directories for .srt files, loops through each file, and translates the subtitles.
 
 <br>
 
-- `python.exe srt_translator.py "D:\ExampleDirectory\example_subtitles1.srt" "D:\ExampleDirectory\example_subtitles2.srt" -t`
+- `python.exe srt_translator.py -t --l=hr --srt="D:\ExampleDirectory\sub1.srt","D:\ExampleDirectory\sub2.srt"`
 - Loops through provided .srt files and translates the subtitles
 
 <br>
 
 - After the translation is complete, a new .srt file is created in the same directory with the translated content.
-- `"D:\ExampleDirectory\example_subtitles1_-TRANSLATED.srt"` 
 
 
 #### Flags:
-`-d`: specifies directory <br>
-`-t`: runs multiple threads for faster execution
+`--d` or `--directory`: specifies directories to scan and translate (use `,` as separator for multiple directories) <br>
+`--t` or `--threaded`: runs multiple threads for faster execution <br>
+`--l` or `--language`: specifies translation language in BCP-47 language code (eg. `--l:en` for English) <br>
+`--srt` or `--subtitle-file`: specifies subtitle files to translate (use `,` as separator for multiple .srt files)<br>
 
 <br>
 
 #
 
 ### TODO:
-- ### Specify destination language as command line argument (language to translate to)
-    - Currently, it only translates en -> hr
+- ### Validate language code
+- ### Implement `--help` command
