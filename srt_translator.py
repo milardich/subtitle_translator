@@ -89,18 +89,40 @@ def translate_srt_file(srt_file_path, destination_language, translated_srt_path)
 
 
 def dir_translate(directories: list[str]):
-    pass
+    for directory in directories:
+        try:
+            files = os.listdir(directory)
+            for file in files:
+                if file.endswith(".srt"):
+                    translated_srt_path = directory + "\\"+ file[:-4] + "." + translate_settings["language"] + ".srt"
+                    if(sys.argv.__contains__("-t")):
+                        t = threading.Thread(target = translate_srt_file, args = (directory + "\\" + file, translate_settings["language"], translated_srt_path))
+                        t.start()
+                    else:
+                        translate_srt_file(directory + "\\" + file, translate_settings["language"], translated_srt_path)
+        except NotADirectoryError as err:
+            print(err)
 
 
 def srt_translate(srt_files: list[str]):
-    pass
+    for srt_file in srt_files:
+        translated_srt_path = srt_file[:-4] + "." + translate_settings["language"] + ".srt"
+        if translate_settings["threaded"] == True:
+            t = threading.Thread(target = translate_srt_file, args = (srt_file, translate_settings["language"], translated_srt_path))
+            t.start()
+        else:
+            translate_srt_file(srt_file, translate_settings["language"], translated_srt_path)
 
+
+# TODO: implement BCP-47 language code validation
+def validate_language(language: str):
+    return True
 
 
 '''
 Example usage:
-> python srt_translator.py -t -l=hr -d="D:\Movies\ExampleMovie","D:\Movies\ExampleMovie"
-> python srt_translator.py -t -l=hr -srt="D:\Movies\ExampleMovie\subtitle.srt","D:\Movies\ExampleMovie\subtitle2.srt"
+> python srt_translator.py -t --l=hr --d="D:\Movies\ExampleMovie","D:\Movies\ExampleMovie"
+> python srt_translator.py -t --l=hr --srt="D:\Movies\ExampleMovie\subtitle.srt","D:\Movies\ExampleMovie\subtitle2.srt"
 '''
 
 if __name__ == "__main__":
@@ -126,10 +148,10 @@ if __name__ == "__main__":
         if option in ("-h", "--help"):
             print("\nTODO: implement help option")
 
-    if len(translate_settings["directories"] ) > 0:
+    if len(translate_settings["directories"]) > 0:
         dir_translate(translate_settings["directories"])
 
-    if len(translate_settings["srtFiles"] > 0):
+    if len(translate_settings["srtFiles"]) > 0:
         srt_translate(translate_settings["srtFiles"])
 
 
